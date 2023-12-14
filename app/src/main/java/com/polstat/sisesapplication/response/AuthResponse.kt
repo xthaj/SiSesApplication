@@ -1,8 +1,8 @@
-package com.polstat.sisesapplication.model
+package com.polstat.sisesapplication.response
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginResponse(
+data class AuthResponse(
     val token: String
 )

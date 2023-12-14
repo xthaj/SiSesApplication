@@ -13,6 +13,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.sisesapplication.SiSesApplication
 import com.polstat.sisesapplication.data.UserPreferencesRepository
 import com.polstat.sisesapplication.data.UserRepository
+import com.polstat.sisesapplication.form.ChangePasswordForm
 import com.polstat.sisesapplication.model.User
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -100,19 +101,42 @@ class ProfileViewModel(
 
     suspend fun updateProfile(): UpdateProfileResult {
         try {
+            Log.e(TAG, "Before Profile - " +
+                    "Username: $username, " +
+                    "Name: $nameField, " +
+                    "Kelas: $kelasField, " +
+                    "Divisi: ${divisi ?: "null"}, " +
+                    "Role: $role, " +
+                    "Status Keanggotaan: $statusKeanggotaan")
+
+            Log.e(TAG, "Token: $token")
+
             userRepository.updateUser(
                 token = token,
                 username = username,
+
                 user = User(
                     username = username,
                     nama = nameField,
                     kelas = kelasField,
-                    divisi = divisi,
-                    statusKeanggotaan = statusKeanggotaan,
-                    role = role
+                    divisi = divisi.takeIf { it.isNotBlank() },
+                    role = role,
+                    statusKeanggotaan = statusKeanggotaan
                 )
             )
+
+            Log.e(TAG, "Updated Profile - " +
+                    "Username: $username, " +
+                    "Name: $nameField, " +
+                    "Kelas: $kelasField, " +
+                    "Divisi: $divisi, " +
+                    "Role: $role, " +
+                    "Status Keanggotaan: $statusKeanggotaan")
+
+
             userPreferencesRepository.saveName(nameField)
+            userPreferencesRepository.saveKelas(kelasField)
+
         } catch (e: Exception) {
             Log.e(TAG, "Error: ${e.message}")
             return UpdateProfileResult.Error
@@ -127,13 +151,14 @@ class ProfileViewModel(
         }
 
         try {
-//            userRepository.updatePassword(
-//                token,
-//                ChangePasswordForm(
-//                    oldPassword = oldPasswordField,
-//                    newPassword = newPasswordField
-//                )
-//            )
+            userRepository.updatePassword(
+                token,
+                ChangePasswordForm(
+                    currentPassword = oldPasswordField,
+                    newPassword = newPasswordField,
+                    confirmationPassword = newPasswordField
+                )
+            )
         } catch (e: HttpException) {
             return when (e.code()) {
                 401 -> UpdatePasswordResult.WrongPassword

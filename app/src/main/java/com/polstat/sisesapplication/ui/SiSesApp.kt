@@ -54,6 +54,7 @@ import com.polstat.sisesapplication.R
 import com.polstat.sisesapplication.data.UserState
 import com.polstat.sisesapplication.ui.home.HomeScreen
 import com.polstat.sisesapplication.ui.profile.ProfileScreen
+import com.polstat.sisesapplication.ui.register.RegisterScreen
 import kotlinx.coroutines.launch
 
 enum class SiSesScreen {
@@ -173,13 +174,13 @@ fun SiSesApp(
                     )
                 }
 
-//                composable(route = SiSesScreen.Register.name) {
-//                    RegisterScreen(
-//                        onBackButtonClicked = { navController.navigate(SiSesScreen.Login.name) },
-//                        showSpinner = { siSesAppViewModel.showSpinner() },
-//                        showMessage = { title, body -> siSesAppViewModel.showMessageDialog(title, body) }
-//                    )
-//                }
+                composable(route = SiSesScreen.Register.name) {
+                    RegisterScreen(
+                        onBackButtonClicked = { navController.navigate(SiSesScreen.Login.name) },
+                        showSpinner = { siSesAppViewModel.showSpinner() },
+                        showMessage = { title, body -> siSesAppViewModel.showMessageDialog(title, body) }
+                    )
+                }
 
                 composable(route = SiSesScreen.Home.name) {
                     HomeScreen()

@@ -45,14 +45,14 @@ class LoginViewModel(
 
             userPreferencesRepository.saveToken(loginResponse.token)
 
-            Log.d(TAG, "hello1")
+//            Log.d(TAG, "hello1")
             val user = userRepository.getProfile(loginResponse.token, usernameField)
-            Log.d(TAG, "hello2")
+//            Log.d(TAG, "hello2")
             val isAdmin = user.role == "ADMIN"
-            Log.d(TAG, "username: ${user.username}")
-            Log.d(TAG, "name: ${user.nama}")
-            Log.d(TAG, "isAdmin: $isAdmin")
-            Log.d(TAG, "divisi: ${user.divisi}")
+//            Log.d(TAG, "username: ${user.username}")
+//            Log.d(TAG, "name: ${user.nama}")
+//            Log.d(TAG, "isAdmin: $isAdmin")
+//            Log.d(TAG, "divisi: ${user.divisi}")
 
             userPreferencesRepository.saveUsername(user.username)
             userPreferencesRepository.saveName(user.nama)
