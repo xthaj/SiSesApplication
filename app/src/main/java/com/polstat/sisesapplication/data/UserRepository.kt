@@ -15,7 +15,6 @@ interface UserRepository {
     suspend fun updateUser(token: String, username: String, user: User): User
     suspend fun updatePassword(token: String, form: ChangePasswordForm): ApiResponse
 
-
 }
 
 class NetworkUserRepository(private val userService: UserService) : UserRepository {

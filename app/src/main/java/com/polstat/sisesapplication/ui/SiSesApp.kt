@@ -53,6 +53,7 @@ import com.polstat.singadu.ui.LoginScreen
 import com.polstat.sisesapplication.R
 import com.polstat.sisesapplication.data.UserState
 import com.polstat.sisesapplication.ui.home.HomeScreen
+import com.polstat.sisesapplication.ui.meeting.MeetingScreen
 import com.polstat.sisesapplication.ui.profile.ProfileScreen
 import com.polstat.sisesapplication.ui.register.RegisterScreen
 import kotlinx.coroutines.launch
@@ -64,7 +65,7 @@ enum class SiSesScreen {
     Profile,
     ProblemTypeManagement,
     CreateProblemType,
-    UserManagement,
+    MeetingManagement,
     EditUser
 }
 
@@ -195,13 +196,13 @@ fun SiSesApp(
                     )
                 }
 
-//                composable(route = SiSesScreen.UserManagement.name) {
-//                    UserManagementScreen(
-//                        showMessage = { title, body -> singaduAppViewModel.showMessageDialog(title, body) },
-//                        showSpinner = { singaduAppViewModel.showSpinner() },
-//                        navController = navController
-//                    )
-//                }
+                composable(route = SiSesScreen.MeetingManagement.name) {
+                    MeetingScreen(
+                        showMessage = { title, body -> siSesAppViewModel.showMessageDialog(title, body) },
+                        showSpinner = { siSesAppViewModel.showSpinner() },
+                        navController = navController
+                    )
+                }
 
 //                composable(
 //                    route = "${SiSesScreen.EditUser.name}/{userId}",
@@ -327,6 +328,7 @@ fun SingaduDrawer(
             navController.navigate(SiSesScreen.Profile.name)
             closeDrawer()
         }
+
         DrawerNavigationItem(
             icons = Icons.Filled.ExitToApp,
             text = R.string.logout
@@ -336,6 +338,15 @@ fun SingaduDrawer(
                 navController.navigate(SiSesScreen.Login.name)
                 closeDrawer()
             }
+        }
+
+        DrawerNavigationItem(
+            //TODO
+            Icons.Filled.Home,
+            text = R.string.menu_meeting
+        ) {
+            navController.navigate(SiSesScreen.MeetingManagement.name)
+            closeDrawer()
         }
     }
 }

@@ -58,15 +58,6 @@ class ProfileViewModel(
 
     init {
         viewModelScope.launch {
-//            userPreferencesRepository.user.collect { user ->
-//                token = user.token
-//                nameField = user.name
-//                username = user.username
-//                kelasField = user.kelas
-//                divisi = user.divisi
-//                role = if (user.isAdmin) "ADMIN" else "USER"
-//            }
-//        }
             userPreferencesRepository.user.collect { user ->
                 token = user.token
                 nameField = user.name

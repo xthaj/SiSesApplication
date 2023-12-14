@@ -17,6 +17,7 @@
     <string name="menu">Menu</string>
     <string name="profile">Profil</string>
     <string name="kembali">Kembali</string>
+    <string name="menu_meeting">Meeting</string>
     <string name="menu_beranda">Beranda</string>
     <string name="menu_pengaturan">Pengaturan</string>
     <string name="menu_edit_profil">Ubah Profil</string>
