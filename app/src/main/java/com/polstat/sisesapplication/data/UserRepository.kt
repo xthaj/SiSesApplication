@@ -1,5 +1,6 @@
 package com.polstat.sisesapplication.data
 
+import com.polstat.sisesapplication.form.ApplyForm
 import com.polstat.sisesapplication.form.ChangePasswordForm
 import com.polstat.sisesapplication.form.LoginForm
 import com.polstat.sisesapplication.form.RegisterForm
@@ -15,6 +16,13 @@ interface UserRepository {
     suspend fun updateUser(token: String, username: String, user: User): User
     suspend fun updatePassword(token: String, form: ChangePasswordForm): ApiResponse
 
+    // applicants
+
+    suspend fun getApplicants(token: String): List<User>
+    suspend fun apply(token: String, form: ApplyForm): ApiResponse
+    suspend fun declineApplicant(token: String, username: String): User
+    suspend fun acceptApplicant(token: String, username: String): User
+
 }
 
 class NetworkUserRepository(private val userService: UserService) : UserRepository {
@@ -25,6 +33,13 @@ class NetworkUserRepository(private val userService: UserService) : UserReposito
         return userService.updateUser("Bearer $token", username, user)
     }
     override suspend fun updatePassword(token: String, form: ChangePasswordForm): ApiResponse = userService.updatePassword("Bearer $token", form)
+
+    // applicants
+
+    override suspend fun getApplicants(token: String): List<User> = userService.getApplicants("Bearer $token")
+    override suspend fun apply(token: String, form: ApplyForm): ApiResponse = userService.apply("Bearer $token", form)
+    override suspend fun declineApplicant(token: String, username: String): User = userService.declineApplicant("Bearer $token", username)
+    override suspend fun acceptApplicant(token: String, username: String): User = userService.acceptApplicant("Bearer $token", username)
 
 
 }

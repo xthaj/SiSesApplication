@@ -31,11 +31,14 @@ import com.polstat.sisesapplication.R
 import com.polstat.sisesapplication.ui.ConfirmDialog
 import com.polstat.sisesapplication.ui.DrawerNavigationItem
 import com.polstat.sisesapplication.ui.ItemCard
+import com.polstat.sisesapplication.ui.MeetingCard
+import com.polstat.sisesapplication.ui.SiSesScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MeetingScreen(
+    isAdmin: Boolean,
     modifier: Modifier = Modifier,
     meetingViewModel: MeetingViewModel = viewModel(factory = MeetingViewModel.Factory),
     showSpinner: () -> Unit = {},
@@ -89,6 +92,7 @@ fun MeetingScreen(
         Spacer(modifier = Modifier.padding(5.dp))
 
         MeetingList(
+            isAdmin = isAdmin,
             meetingManagementUiState = meetingViewModel.meetingManagementUiState,
             onDeleteClicked = {
 //                    selectedUserId ->
@@ -96,8 +100,8 @@ fun MeetingScreen(
 //                showConfirmDialog = true
             },
             onEditClicked = {
-//                    userId ->
-//                navController.navigate("${SingaduScreen.EditUser.name}/$userId")
+                    userId ->
+                navController.navigate("${SiSesScreen.EditUser.name}/$userId")
             }
         )
     }
@@ -105,6 +109,7 @@ fun MeetingScreen(
 
 @Composable
 fun MeetingList(
+    isAdmin: Boolean,
     meetingManagementUiState: MeetingManagementUiState,
     onDeleteClicked: (Long) -> Unit = {},
     onEditClicked: (Long) -> Unit = {}
@@ -120,29 +125,35 @@ fun MeetingList(
             val meetings = meetingManagementUiState.meetings
             LazyColumn(modifier = Modifier.fillMaxHeight()) {
                 items(items = meetings) { meeting ->
-                    ItemCard(
+                    MeetingCard(
                         title = meeting.meetingName,
-                        description = meeting.meetingDate,
+                        meetingDate = meeting.meetingDate,
+                        ruang = meeting.ruang,
+                        meetingSummary = meeting.meetingSummary,
                         options = {
                             Column {
                                 DrawerNavigationItem(
                                     icons = Icons.Filled.Edit,
                                     text = R.string.edit_user,
                                     onClick = {
-//                                        user.id?.let { onEditClicked(it) }
+//                                        meeting.meetingId?.let { onEditClicked(it) }
                                     }
                                 )
-                                DrawerNavigationItem(
-                                    icons = Icons.Filled.Delete,
-                                    text = R.string.hapus_akun,
-                                    onClick = {
+
+                                if (isAdmin) {
+                                    DrawerNavigationItem(
+                                        icons = Icons.Filled.Delete,
+                                        text = R.string.hapus_akun,
+                                        onClick = {
 //                                        user.id?.let { onDeleteClicked(it) }
-                                    }
-                                )
+                                        }
+                                    )
+                                }
                             }
                         }
                     )
                 }
+
             }
         }
     }

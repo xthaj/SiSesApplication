@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -48,11 +49,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.polstat.singadu.ui.LoginScreen
+import androidx.navigation.compose.rememberNavController //import com.polstat.sisesapplication.ui.login.LoginScreen
 import com.polstat.sisesapplication.R
 import com.polstat.sisesapplication.data.UserState
+import com.polstat.sisesapplication.ui.applicant.ApplicantScreen
+import com.polstat.sisesapplication.ui.applicant.ApplyScreen
 import com.polstat.sisesapplication.ui.home.HomeScreen
+import com.polstat.sisesapplication.ui.login.LoginScreen
 import com.polstat.sisesapplication.ui.meeting.MeetingScreen
 import com.polstat.sisesapplication.ui.profile.ProfileScreen
 import com.polstat.sisesapplication.ui.register.RegisterScreen
@@ -66,7 +69,9 @@ enum class SiSesScreen {
     ProblemTypeManagement,
     CreateProblemType,
     MeetingManagement,
-    EditUser
+    EditUser,
+    ApplicantsManagement,
+    Apply
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -111,7 +116,7 @@ fun SiSesApp(
         drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
-                SingaduDrawer(
+                SiSesDrawer(
                     user = loggedInUser,
                     navController = navController,
                     closeDrawer = {
@@ -198,6 +203,23 @@ fun SiSesApp(
 
                 composable(route = SiSesScreen.MeetingManagement.name) {
                     MeetingScreen(
+                        isAdmin = loggedInUser.isAdmin,
+                        showMessage = { title, body -> siSesAppViewModel.showMessageDialog(title, body) },
+                        showSpinner = { siSesAppViewModel.showSpinner() },
+                        navController = navController
+                    )
+                }
+
+                composable(route = SiSesScreen.ApplicantsManagement.name) {
+                    ApplicantScreen(
+                        showMessage = { title, body -> siSesAppViewModel.showMessageDialog(title, body) },
+                        showSpinner = { siSesAppViewModel.showSpinner() },
+                        navController = navController
+                    )
+                }
+
+                composable(route = SiSesScreen.Apply.name) {
+                    ApplyScreen(
                         showMessage = { title, body -> siSesAppViewModel.showMessageDialog(title, body) },
                         showSpinner = { siSesAppViewModel.showSpinner() },
                         navController = navController
@@ -268,7 +290,7 @@ fun SiSesAppBar(
 }
 
 @Composable
-fun SingaduDrawer(
+fun SiSesDrawer(
     user: UserState,
     navController: NavHostController,
     modifier: Modifier = Modifier,
@@ -304,22 +326,15 @@ fun SingaduDrawer(
             closeDrawer()
         }
 
-//        if (user.isAdmin) {
-//            DrawerNavigationItem(
-//                icons = Icons.Filled.MailOutline,
-//                text = R.string.menu_manajemen_jenis_masalah
-//            ) {
-//                navController.navigate(SiSesScreen.ProblemTypeManagement.name)
-//                closeDrawer()
-//            }
-//            DrawerNavigationItem(
-//                Icons.Filled.Face,
-//                text = R.string.menu_manajemen_user
-//            ) {
-//                navController.navigate(SiSesScreen.UserManagement.name)
-//                closeDrawer()
-//            }
-//        }
+        if (user.isAdmin) {
+            DrawerNavigationItem(
+                icons = Icons.Filled.MailOutline,
+                text = R.string.menu_pendaftaran
+            ) {
+                navController.navigate(SiSesScreen.ApplicantsManagement.name)
+                closeDrawer()
+            }
+        }
 
         DrawerNavigationItem(
             icons = Icons.Filled.Face,

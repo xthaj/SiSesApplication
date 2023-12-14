@@ -1,4 +1,4 @@
-package com.polstat.singadu.ui
+package com.polstat.sisesapplication.ui.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

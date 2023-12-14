@@ -18,7 +18,7 @@ class DefaultAppContainer() : AppContainer {
         .baseUrl(baseUrl)
         .build()
 
-    //user
+    //user + applicants
     private val userService: UserService by lazy {
         retrofit.create(UserService::class.java)
     }

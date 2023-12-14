@@ -57,7 +57,7 @@ fun ProfileScreen(
                     when (profileViewModel.deleteAccount()) {
                         DeleteAccountResult.Success -> {
                             showMessage(R.string.sukses, R.string.berhasil_hapus_akun)
-                            navController.navigate(SiSesScreen.Login.name)
+                            navController.navigate(SiSesScreen.Apply.name)
                         }
                         else -> showMessage(R.string.error, R.string.network_error)
                     }
@@ -168,6 +168,17 @@ fun ProfileScreen(
                 ) {
                     Text(text = stringResource(id = R.string.ubah_profil))
                 }
+
+                if (profileViewModel.statusKeanggotaan == "BUKAN_ANGGOTA") {
+                    Button(
+                        onClick = {
+                            navController.navigate(SiSesScreen.Apply.name)
+                        }
+                    ) {
+                        Text(text = stringResource(id = R.string.daftar))
+                    }
+                }
+
             }
         }
 
