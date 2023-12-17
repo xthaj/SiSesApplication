@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.sisesapplication.SiSesApplication
-import com.polstat.sisesapplication.data.UserPreferencesRepository
-import com.polstat.sisesapplication.data.UserState
+import com.polstat.sisesapplication.repository.UserPreferencesRepository
+import com.polstat.sisesapplication.repository.UserState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow

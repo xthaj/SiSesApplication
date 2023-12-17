@@ -5,10 +5,12 @@ package com.polstat.sisesapplication.ui
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -42,6 +44,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -133,9 +136,10 @@ fun ConfirmDialog(
             Box(
                 modifier = Modifier
                     .background(
-                        MaterialTheme.colorScheme.primaryContainer,
+                        MaterialTheme.colorScheme.secondary,
                         shape = RoundedCornerShape(8.dp)
                     )
+                    .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(8.dp))
                     .padding(18.dp)
             ) {
                 Column(
@@ -150,18 +154,24 @@ fun ConfirmDialog(
 
                     Text(
                         text = stringResource(id = message),
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center, // Ensures text is centered if it wraps to a new line
+                        modifier = Modifier
+                            .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 8.dp)
+                            .fillMaxWidth() // Makes Text composable take the full width
                     )
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
+                        horizontalArrangement = Arrangement.Center,
+                        ) {
                         Button(
                             onClick = onDismissRequest
                         ) {
                             Text(text = stringResource(id = R.string.tidak))
                         }
+
+                        Spacer(modifier = Modifier.padding(8.dp))
 
                         Button(
                             onClick = onConfirmRequest,
@@ -186,9 +196,11 @@ fun MessageDialog(
     onDismissRequest: () -> Unit,
     onClose: () -> Unit,
     @StringRes title: Int,
-    @StringRes message: Int
+    @StringRes message: Int,
+    modifier: Modifier = Modifier
 ) {
     AlertDialog(
+        modifier = modifier.border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(12)),
         onDismissRequest = onDismissRequest,
         title = {
             Text(text = stringResource(id = title))
@@ -200,43 +212,4 @@ fun MessageDialog(
             Button(onClick = onClose) { Text(text = stringResource(R.string.tutup)) }
         }
     )
-}
-
-@Composable
-fun AppCover(
-    onDismissRequest: () -> Unit = {}
-) {
-    Dialog(
-        onDismissRequest = onDismissRequest,
-        properties = DialogProperties(
-            dismissOnBackPress = false,
-            dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false
-        )
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(color = MaterialTheme.colorScheme.background),
-            contentAlignment = Alignment.Center,
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = stringResource(id = R.string.logo),
-                modifier = Modifier.align(Alignment.Center)
-            )
-        }
-    }
-}
-
-@Preview
-@Composable
-fun ConfirmDialogPreview() {
-    SiSesApplicationTheme {
-        ConfirmDialog(
-            onConfirmRequest = {},
-            onDismissRequest = {},
-            message = R.string.konfirmasi_hapus_akun
-        )
-    }
 }

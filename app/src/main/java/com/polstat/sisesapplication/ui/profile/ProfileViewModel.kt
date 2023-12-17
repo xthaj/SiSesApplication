@@ -11,8 +11,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.sisesapplication.SiSesApplication
-import com.polstat.sisesapplication.data.UserPreferencesRepository
-import com.polstat.sisesapplication.data.UserRepository
+import com.polstat.sisesapplication.repository.UserPreferencesRepository
+import com.polstat.sisesapplication.repository.UserRepository
 import com.polstat.sisesapplication.form.ChangePasswordForm
 import com.polstat.sisesapplication.model.User
 import kotlinx.coroutines.launch
@@ -116,15 +116,6 @@ class ProfileViewModel(
                 )
             )
 
-            Log.e(TAG, "Updated Profile - " +
-                    "Username: $username, " +
-                    "Name: $nameField, " +
-                    "Kelas: $kelasField, " +
-                    "Divisi: $divisi, " +
-                    "Role: $role, " +
-                    "Status Keanggotaan: $statusKeanggotaan")
-
-
             userPreferencesRepository.saveName(nameField)
             userPreferencesRepository.saveKelas(kelasField)
 
@@ -165,18 +156,19 @@ class ProfileViewModel(
 
     suspend fun deleteAccount(): DeleteAccountResult {
         try {
-//            userRepository.deleteProfile(token)
+            userRepository.deleteUser(token, username)
         } catch (e: Exception) {
             Log.e(TAG, "Error: ${e.message}")
             return DeleteAccountResult.Error
         }
 
-//        userPreferencesRepository.saveToken("")
-//        userPreferencesRepository.saveName("")
-//        userPreferencesRepository.saveEmail("")
-//        userPreferencesRepository.saveIsAdmin(false)
-//        userPreferencesRepository.saveIsSupervisor(false)
-//        userPreferencesRepository.saveIsEnumerator(false)
+        userPreferencesRepository.saveToken("")
+        userPreferencesRepository.saveUsername("")
+        userPreferencesRepository.saveName("")
+        userPreferencesRepository.saveKelas("")
+        userPreferencesRepository.saveStatusKeanggotaan("")
+        userPreferencesRepository.saveIsAdmin(false)
+        userPreferencesRepository.saveDivisi("")
 
         return DeleteAccountResult.Success
     }

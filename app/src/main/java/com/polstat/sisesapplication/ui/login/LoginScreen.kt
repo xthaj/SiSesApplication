@@ -1,6 +1,7 @@
 package com.polstat.sisesapplication.ui.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,7 +53,11 @@ fun LoginScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(5.dp)
+
     ) {
         Card {
             Column(
@@ -116,29 +121,22 @@ fun LoginScreen(
                     Text(text = stringResource(id = R.string.login))
                 }
 
-                Spacer(modifier = Modifier.padding(8.dp))
+                Spacer(modifier = Modifier.padding(2.dp))
 
                 Text(
                     text = stringResource(id = R.string.link_daftar),
                     style = TextStyle(
-                        fontWeight = FontWeight.Light,
-                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
                         textDecoration = TextDecoration.Underline,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.primary
+
                     ),
                     modifier = Modifier.clickable { onRegisterButtonClicked() }
                 )
+
+                Spacer(modifier = Modifier.padding(8.dp))
             }
         }
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun LoginScreenPreview() {
-    SiSesApplicationTheme {
-        LoginScreen(
-            onLoginSuccess = {}
-        )
     }
 }

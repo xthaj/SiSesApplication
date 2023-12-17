@@ -1,4 +1,4 @@
-package com.polstat.sisesapplication.data
+package com.polstat.sisesapplication.repository
 
 import android.util.Log
 import androidx.datastore.core.DataStore
@@ -98,5 +98,4 @@ data class UserState(
     val statusKeanggotaan: String,
     val isAdmin: Boolean,
     val divisi: String
-
 )

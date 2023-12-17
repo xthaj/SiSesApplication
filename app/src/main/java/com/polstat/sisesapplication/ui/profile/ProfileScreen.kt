@@ -1,9 +1,13 @@
 package com.polstat.sisesapplication.ui.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -57,7 +61,7 @@ fun ProfileScreen(
                     when (profileViewModel.deleteAccount()) {
                         DeleteAccountResult.Success -> {
                             showMessage(R.string.sukses, R.string.berhasil_hapus_akun)
-                            navController.navigate(SiSesScreen.Apply.name)
+                            navController.navigate(SiSesScreen.Login.name)
                         }
                         else -> showMessage(R.string.error, R.string.network_error)
                     }
@@ -73,6 +77,7 @@ fun ProfileScreen(
         modifier = modifier
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
+            .background(MaterialTheme.colorScheme.primary)
             .padding(horizontal = 12.dp)
     ) {
         Spacer(modifier = Modifier.padding(24.dp))
@@ -154,22 +159,53 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.padding(8.dp))
 
-                Button(
-                    onClick = {
-                        showSpinner()
+                Row {
+                    Button(
+                        onClick = {
+                            showSpinner()
 
-                        scope.launch {
-                            when (profileViewModel.updateProfile()) {
-                                UpdateProfileResult.Success -> showMessage(R.string.sukses, R.string.berhasil_ubah_profil)
-                                UpdateProfileResult.Error -> showMessage(R.string.error, R.string.network_error)
+                            scope.launch {
+                                when (profileViewModel.updateProfile()) {
+                                    UpdateProfileResult.Success -> showMessage(R.string.sukses, R.string.berhasil_ubah_profil)
+                                    UpdateProfileResult.Error -> showMessage(R.string.error, R.string.network_error)
+                                }
                             }
                         }
+                    ) {
+                        Text(text = stringResource(id = R.string.ubah_profil))
                     }
-                ) {
-                    Text(text = stringResource(id = R.string.ubah_profil))
-                }
 
-                if (profileViewModel.statusKeanggotaan == "BUKAN_ANGGOTA") {
+                    Spacer(modifier = Modifier.padding(12.dp))
+
+                    Button(
+                        onClick = { profileViewModel.showConfirmDialog = true },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.tertiary
+                        )
+                    ) {
+                        Text(text = stringResource(id = R.string.hapus_akun), color = MaterialTheme.colorScheme.onTertiary)
+                    }
+                }
+            }
+        }
+
+        if (profileViewModel.statusKeanggotaan == "BUKAN_ANGGOTA") {
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            Card {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .padding(horizontal = 30.dp, vertical = 15.dp)
+                ) {
+                    Text(
+                        text = "Apply to be SES Member",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp
+                    )
+
+                    Spacer(modifier = Modifier.padding(8.dp))
+
                     Button(
                         onClick = {
                             navController.navigate(SiSesScreen.Apply.name)
@@ -177,10 +213,11 @@ fun ProfileScreen(
                     ) {
                         Text(text = stringResource(id = R.string.daftar))
                     }
-                }
 
+                }
             }
         }
+
 
         Spacer(modifier = Modifier.padding(12.dp))
 
@@ -253,29 +290,5 @@ fun ProfileScreen(
 
         Spacer(modifier = Modifier.padding(12.dp))
 
-        Button(
-            onClick = { profileViewModel.showConfirmDialog = true },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.error
-            ),
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = stringResource(id = R.string.hapus_akun))
-        }
-
-        Spacer(modifier = Modifier.padding(24.dp))
-    }
-}
-
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun ProfileScreenPreview() {
-    val username = "Testing@gmail.com"
-
-    SiSesApplicationTheme {
-        ProfileScreen(
-            username = username,
-            navController = rememberNavController()
-        )
     }
 }

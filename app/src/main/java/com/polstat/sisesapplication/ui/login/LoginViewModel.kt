@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.sisesapplication.SiSesApplication
-import com.polstat.sisesapplication.data.UserPreferencesRepository
-import com.polstat.sisesapplication.data.UserRepository
+import com.polstat.sisesapplication.repository.UserPreferencesRepository
+import com.polstat.sisesapplication.repository.UserRepository
 import com.polstat.sisesapplication.form.LoginForm
 import retrofit2.HttpException
 
@@ -38,21 +38,10 @@ class LoginViewModel(
 
     suspend fun attemptLogin(): LoginResult {
         try {
-            Log.d(TAG, "uname: $usernameField")
-            Log.d(TAG, "password: $passwordField")
             val loginResponse = userRepository.login(LoginForm(usernameField, passwordField))
-            Log.d(TAG, "accessToken: ${loginResponse.token}")
-
             userPreferencesRepository.saveToken(loginResponse.token)
-
-//            Log.d(TAG, "hello1")
             val user = userRepository.getProfile(loginResponse.token, usernameField)
-//            Log.d(TAG, "hello2")
             val isAdmin = user.role == "ADMIN"
-//            Log.d(TAG, "username: ${user.username}")
-//            Log.d(TAG, "name: ${user.nama}")
-//            Log.d(TAG, "isAdmin: $isAdmin")
-//            Log.d(TAG, "divisi: ${user.divisi}")
 
             userPreferencesRepository.saveUsername(user.username)
             userPreferencesRepository.saveName(user.nama)

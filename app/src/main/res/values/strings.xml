@@ -2,44 +2,47 @@
     <string name="app_name">SiSesApplication</string>
     <string name="app_name_full">Sistem Informasi UKM SES</string>
     <string name="logo">Logo SI-Ses</string>
-    <string name="nama">Nama Lengkap</string>
+    <string name="nama">Full Name</string>
     <string name="username">Username</string>
-    <string name="kelas">Kelas</string>
-    <string name="divisi">Divisi</string>
-    <string name="status_keanggotaan">Status Keanggotaan</string>
+    <string name="kelas">Class</string>
+    <string name="divisi">Division</string>
+    <string name="status_keanggotaan">Membership Status</string>
     <string name="role">Role</string>
 
+    <!--    login $ register-->
     <string name="password">Password</string>
-    <string name="konfirmasi_password">Konfirmasi Password</string>
+    <string name="konfirmasi_password">Confirm Password</string>
     <string name="login">Login</string>
     <string name="link_daftar">Buat akun</string>
-    <string name="register">Daftar</string>
+    <string name="berhasil_registrasi">Account registration successful!</string>
+    <string name="username_tidak_unik">Username has been used by someone else!</string>
+    <string name="register_lengkap">Register A New Account</string>
     <string name="menu">Menu</string>
-    <string name="profile">Profil</string>
-    <string name="kembali">Kembali</string>
-    <string name="daftar">Daftar</string>
+    <string name="profile">Profile</string>
+    <string name="kembali">Back</string>
+    <string name="daftar">Register</string>
     <string name="menu_meeting">Meeting</string>
-    <string name="menu_beranda">Beranda</string>
+    <string name="menu_beranda">Home</string>
     <string name="menu_pendaftaran">Applicants</string>
     <string name="menu_pengaturan">Pengaturan</string>
     <string name="menu_edit_profil">Ubah Profil</string>
-    <string name="hide_password">Sembunyikan password</string>
-    <string name="show_password">Perlihatkan password</string>
-    <string name="tutup">Tutup</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="tutup">Close</string>
     <string name="error">Error</string>
-    <string name="sukses">Sukses</string>
+    <string name="sukses">Success</string>
+
     <string name="berhasil_buat_akun">Akun berhasil dibuat!</string>
-    <string name="semua_field_harus_diisi">Semua isian harus diisi</string>
+    <string name="semua_field_harus_diisi">Please fill all fields!</string>
     <string name="password_mismatch">Password tidak sama</string>
     <string name="email_atau_password_salah">Email atau password salah</string>
-    <string name="network_error">Tidak dapat terhubung dengan server</string>
-    <string name="ubah_profil">Ubah Profil</string>
+    <string name="network_error">Unable to connect to server</string>
+    <string name="ubah_profil">Modify Profile</string>
     <string name="ubah_password">Ubah Password</string>
     <string name="password_baru">Password Baru</string>
     <string name="password_lama">Password Lama</string>
     <string name="berhasil_ubah_profil">Berhasil mengubah profil</string>
     <string name="berhasil_ubah_password">Berhasil mengubah password</string>
-    <string name="berhasil_menambah_jenis_masalah">Berhasil menambah jenis masalah</string>
     <string name="password_salah">Password salah</string>
     <string name="ya">Ya</string>
     <string name="tidak">Tidak</string>
@@ -49,10 +52,44 @@
     <string name="berhasil_hapus_akun_terpilih">Akun terpilih telah dihapus</string>
     <string name="tambah_item">Tambah item</string>
     <string name="tambah">Tambah</string>
-    <string name="plus">+</string>
-    <string name="cari">Cari</string>
-    <string name="edit_user">Pengaturan pengguna</string>
-    <string name="role_admin">Admin</string>
-    <string name="berhasil_ubah_role">Berhasil mengubah role</string>
     <string name="logout">Keluar</string>
+
+    <!--    meeting-->
+    <string name="berhasil_hapus_meeting">This meeting has been deleted successfully.</string>
+    <string name="meeting">Meeting</string>
+    <string name="nama_meeting">Meeting Name</string>
+    <string name="tanggal_meeting">Meeting Data</string>
+    <string name="ringkasan_meeting">Meeting Summary</string>
+    <string name="buat_meeting">Create Meeting</string>
+    <string name="edit_meeting">Update Meeting</string>
+    <string name="berhasil_edit_meeting">Meeting has been updated!</string>
+    <string name="hapus_meeting">Delete Meeting</string>
+    <string name="ruang_meeting">Meeting Room</string>
+    <string name="kehadiran">Check All Attendees</string>
+    <string name="daftar_kehadiran">Attendance List</string>
+    <string name="hapus_kehadiran">Delete Attendance</string>
+    <string name="berhasil_hapus_attendance">Attendance has been deleted</string>
+    <string name="hapus_attendance">Delete attendance</string>
+
+
+    <string name="field_kosong">Please fill all the fields</string>
+    <string name="ruang_salah_format">Meeting room doesn\'t exist</string>
+
+    <string name="berhasil_buat_meeting">Berhasil membuat meeting</string>
+    <string name="berhasil_hadir_meeting">Meeting attended!</string>
+    <string name="buat_hadiri_pertemuan">Attend Meeting</string>
+
+
+    <!--    end meeting-->
+
+    <!--    apply-->
+    <string name="pendaftar">Applicants</string>
+    <string name="daftar_ses">Apply</string>
+    <string name="sudah_daftar">You have applied beforehand!</string>
+    <string name="berhasil_daftar">You have applied to be SES member! Please regularly check profile for acceptance status</string>
+    <string name="berhasil_menolak_pendaftar">This applicant has been declined</string>
+    <string name="tolak_pendaftar">Decline applicant</string>
+    <string name="berhasil_menerima_pendaftar">This applicant has been accepted</string>
+    <string name="terima_pendaftar">Accept applicant</string>
+    <!--    end apply-->
 </resources>

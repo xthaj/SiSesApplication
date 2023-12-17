@@ -10,12 +10,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.sisesapplication.SiSesApplication
-import com.polstat.sisesapplication.data.MeetingRepository
-import com.polstat.sisesapplication.data.UserPreferencesRepository
-import com.polstat.sisesapplication.data.UserRepository
-import com.polstat.sisesapplication.model.Meeting
+import com.polstat.sisesapplication.repository.UserPreferencesRepository
+import com.polstat.sisesapplication.repository.UserRepository
 import com.polstat.sisesapplication.model.User
-import com.polstat.sisesapplication.ui.meeting.MeetingViewModel
 import kotlinx.coroutines.launch
 
 

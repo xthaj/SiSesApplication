@@ -19,7 +19,7 @@ import retrofit2.http.Path
 
 interface UserService {
     @POST("auth/register")
-    suspend fun register(@Body user: RegisterForm)
+    suspend fun register(@Body user: RegisterForm): AuthResponse
     @POST("auth/authenticate")
     suspend fun login(@Body form: LoginForm): AuthResponse
     @GET("users/{username}")
@@ -32,6 +32,8 @@ interface UserService {
         @Path("username") username: String,
         @Body user: User
     ): User
+    @DELETE("users/{username}")
+    suspend fun deleteUser(@Header("Authorization") token: String, @Path("username") username: String)
 
     // applications, daftar SES
     @GET("applicants")

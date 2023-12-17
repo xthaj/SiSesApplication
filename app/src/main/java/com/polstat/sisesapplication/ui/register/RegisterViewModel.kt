@@ -8,17 +8,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.sisesapplication.SiSesApplication
-import com.polstat.sisesapplication.data.UserRepository
+import com.polstat.sisesapplication.repository.UserPreferencesRepository
+import com.polstat.sisesapplication.repository.UserRepository
 import com.polstat.sisesapplication.form.RegisterForm
+import retrofit2.HttpException
 
-enum class RegisterResult {
-    Success,
-    EmptyField,
-    PasswordMismatch,
-    NetworkError
-}
+private const val TAG = "RegisterViewModel"
 
-class RegisterViewModel(private val userRepository: UserRepository) : ViewModel() {
+class RegisterViewModel(
+    private val userPreferencesRepository: UserPreferencesRepository,
+    private val userRepository: UserRepository
+) : ViewModel() {
 
     var usernameField by mutableStateOf("")
         private set
@@ -26,22 +26,17 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
         private set
     var passwordField by mutableStateOf("")
         private set
-
     var confirmPasswordField by mutableStateOf("")
         private set
-
     fun updateNameField(name: String) {
         nameField = name
     }
-
     fun updateUsernameField(email: String) {
         usernameField = email
     }
-
     fun updatePasswordField(password: String) {
         passwordField = password
     }
-
     fun updateConfirmPasswordField(password: String) {
         confirmPasswordField = password
     }
@@ -53,13 +48,25 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
         if (passwordField != confirmPasswordField) {
             return RegisterResult.PasswordMismatch
         }
-
         try {
-            userRepository.register(RegisterForm(usernameField, passwordField, nameField))
-        } catch (e: Exception) {
+            val authResponse = userRepository.register(RegisterForm(usernameField, passwordField, nameField))
+            userPreferencesRepository.saveToken(authResponse.token)
+        } catch (e: HttpException) {
+            when (e.code()) {
+                409 -> {
+                    return RegisterResult.UsernameNotUnique
+                }
+            }
+        }
+        catch (e: Exception) {
             return RegisterResult.NetworkError
         }
 
+        userPreferencesRepository.saveUsername(usernameField)
+        userPreferencesRepository.saveName(nameField)
+        userPreferencesRepository.saveDivisi("")
+        userPreferencesRepository.saveKelas("")
+        userPreferencesRepository.saveStatusKeanggotaan("BUKAN_ANGGOTA")
         return RegisterResult.Success
     }
 
@@ -68,9 +75,20 @@ class RegisterViewModel(private val userRepository: UserRepository) : ViewModel(
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as SiSesApplication)
                 val userRepository = application.container.userRepository
-                RegisterViewModel(userRepository = userRepository)
+                RegisterViewModel(
+                    userPreferencesRepository = application.userPreferenceRepository,
+                    userRepository = userRepository
+                )
             }
         }
     }
 
+}
+
+enum class RegisterResult {
+    Success,
+    EmptyField,
+    PasswordMismatch,
+    UsernameNotUnique,
+    NetworkError
 }

@@ -10,14 +10,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.sisesapplication.SiSesApplication
-import com.polstat.sisesapplication.data.UserPreferencesRepository
-import com.polstat.sisesapplication.data.UserRepository
+import com.polstat.sisesapplication.repository.UserPreferencesRepository
+import com.polstat.sisesapplication.repository.UserRepository
 import com.polstat.sisesapplication.form.ApplyForm
-import com.polstat.sisesapplication.form.ChangePasswordForm
-import com.polstat.sisesapplication.model.User
-import com.polstat.sisesapplication.ui.profile.UpdateProfileResult
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 private const val TAG = "ApplyViewModel"
 
@@ -39,6 +35,9 @@ class ApplyViewModel(
     var divisiField by mutableStateOf("")
         private set
 
+    var statusKeanggotaan by mutableStateOf("")
+        private set
+
     val divisiOptions = listOf("SPEECH", "STORY_TELLING", "DEBATE")
 
     var selectedDivisi = mutableStateOf("Select a Division")
@@ -47,6 +46,7 @@ class ApplyViewModel(
             userPreferencesRepository.user.collect { user ->
                 token = user.token
                 username = user.username
+                statusKeanggotaan = user.statusKeanggotaan
                 kelasField = user.kelas
                 divisiField = user.divisi
             }
@@ -62,9 +62,11 @@ class ApplyViewModel(
     }
 
     suspend fun apply(): ApplyResult {
+        if (statusKeanggotaan!= "BUKAN_ANGGOTA") return ApplyResult.AlreadyApplied
+
         try {
             Log.e(TAG, kelasField)
-            Log.e(TAG, divisiField)
+//            Log.e(TAG, divisiField)
 
             userRepository.apply(
                 token = token,
@@ -74,9 +76,9 @@ class ApplyViewModel(
                 )
             )
 
+            userPreferencesRepository.saveKelas(kelasField)
             userPreferencesRepository.saveDivisi(divisiField)
             userPreferencesRepository.saveStatusKeanggotaan("PENDAFTAR")
-            userPreferencesRepository.saveKelas(kelasField)
         } catch (e: Exception) {
             Log.e(TAG, "Error: ${e.message}")
             return ApplyResult.Error
@@ -99,5 +101,6 @@ class ApplyViewModel(
 
 enum class ApplyResult {
     Success,
-    Error
+    Error,
+    AlreadyApplied
 }

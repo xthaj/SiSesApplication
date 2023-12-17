@@ -1,6 +1,10 @@
 package com.polstat.sisesapplication.data
 
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.polstat.sisesapplication.repository.MeetingRepository
+import com.polstat.sisesapplication.repository.NetworkMeetingRepository
+import com.polstat.sisesapplication.repository.NetworkUserRepository
+import com.polstat.sisesapplication.repository.UserRepository
 import com.polstat.sisesapplication.service.MeetingService
 import com.polstat.sisesapplication.service.UserService
 import kotlinx.serialization.json.Json

@@ -10,32 +10,38 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+// Updated Dark Color Scheme with camelCase naming
+private val darkColorScheme = darkColorScheme(
+    primary = Color(0xFF8BC34A),   // Blue Grey 80
+    secondary = Color(0xFF00695C), // Teal 80
+    tertiary = Color(0xFFFF8F00),  // Amber 80
+
+    background = Color(0xFF121212)
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+private val lightColorScheme = lightColorScheme(
+    primary = Color(0xFF31473A),    // Dark green
+    secondary = Color(0xFF9EBBAB),  // Light green
+    tertiary = Color(0xFFEBCBC2),   // Light pink
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    // Other default colors to override
+    background = Color(0xFFF0F4F8), // Light grey for the background
+    surface = Color(0xFFF0F4F8),    // Same as background for consistency
+
+    onPrimary = Color(0xFFFFFFFF),  // White for high contrast on primary
+    onSecondary = Color(0xFF000000),// Black for contrast on secondary
+    onTertiary = Color(0xFF000000), // Black for contrast on tertiary
+    onBackground = Color(0xFF000000),// Black for contrast on background
+    onSurface = Color(0xFF000000),  // Black for contrast on surface
 )
+
+
 
 @Composable
 fun SiSesApplicationTheme(
@@ -44,15 +50,8 @@ fun SiSesApplicationTheme(
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
+    val colorScheme = if (darkTheme) darkColorScheme else lightColorScheme
 
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
-    }
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {

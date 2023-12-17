@@ -1,6 +1,7 @@
 package com.polstat.sisesapplication.ui.register
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,9 +16,11 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,8 +35,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.polstat.sisesapplication.R
 import com.polstat.sisesapplication.ui.PasswordTextField
+import com.polstat.sisesapplication.ui.SiSesScreen
 import com.polstat.sisesapplication.ui.theme.SiSesApplicationTheme
 import kotlinx.coroutines.launch
 
@@ -44,14 +50,18 @@ fun RegisterScreen(
     onBackButtonClicked: () -> Unit = {},
     registerViewModel: RegisterViewModel = viewModel(factory = RegisterViewModel.Factory),
     showSpinner: () -> Unit = {},
-    showMessage: (Int, Int) -> Unit = { _, _ -> }
+    showMessage: (Int, Int) -> Unit = { _, _ -> },
+    navController: NavHostController
 ) {
     val coroutineScope = rememberCoroutineScope()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(5.dp)
     ) {
         Card(
             modifier = Modifier.verticalScroll(rememberScrollState())
@@ -71,7 +81,7 @@ fun RegisterScreen(
                 Spacer(modifier = Modifier.padding(8.dp))
 
                 Text(
-                    text = stringResource(id = R.string.register),
+                    text = stringResource(id = R.string.register_lengkap),
                     style = TextStyle(
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 26.sp
@@ -126,38 +136,38 @@ fun RegisterScreen(
                         showSpinner()
                         coroutineScope.launch {
                             when (registerViewModel.register()) {
-                                RegisterResult.Success -> showMessage(R.string.sukses, R.string.berhasil_buat_akun)
+                                RegisterResult.Success -> {
+                                    showMessage(R.string.sukses, R.string.berhasil_buat_akun)
+                                    navController.navigate(SiSesScreen.Home.name)
+                                }
                                 RegisterResult.EmptyField -> showMessage(R.string.error, R.string.semua_field_harus_diisi)
                                 RegisterResult.PasswordMismatch -> showMessage(R.string.error, R.string.password_mismatch)
+                                RegisterResult.UsernameNotUnique -> showMessage(R.string.error, R.string.username_tidak_unik)
                                 else -> showMessage(R.string.error, R.string.network_error)
                             }
                         }
                     }
                 ) {
-                    Text(text = stringResource(id = R.string.register))
+                    Text(text = "Register")
                 }
 
-                Spacer(modifier = Modifier.padding(8.dp))
+                Spacer(modifier = Modifier.padding(2.dp))
 
                 Text(
                     text = stringResource(id = R.string.kembali),
                     style = TextStyle(
-                        fontWeight = FontWeight.Light,
-                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
                         textDecoration = TextDecoration.Underline,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.primary
                     ),
                     modifier = Modifier.clickable { onBackButtonClicked() }
                 )
+
+                Spacer(modifier = Modifier.padding(8.dp))
+
             }
         }
     }
 }
 
-@Preview(showSystemUi = true, showBackground = true)
-@Composable
-fun RegisterScreenPreview() {
-    SiSesApplicationTheme {
-        RegisterScreen()
-    }
-}

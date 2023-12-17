@@ -1,16 +1,22 @@
 package com.polstat.sisesapplication.ui.applicant
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,10 +24,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -30,7 +39,6 @@ import com.polstat.sisesapplication.ui.ConfirmDialog
 import com.polstat.sisesapplication.ui.UserCard
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ApplicantScreen(
     modifier: Modifier = Modifier,
@@ -51,7 +59,7 @@ fun ApplicantScreen(
                 scope.launch {
                     when (applicantViewModel.declineApplicant()) {
                         DeclineApplicantResult.Success -> {
-                            showMessage(R.string.sukses, R.string.berhasil_hapus_akun_terpilih)
+                            showMessage(R.string.sukses, R.string.berhasil_menolak_pendaftar)
                             applicantViewModel.getAllApplicants()
                         }
                         DeclineApplicantResult.Error -> {
@@ -61,7 +69,7 @@ fun ApplicantScreen(
                 }
             },
             onDismissRequest = { showConfirmDialog = false },
-            message = R.string.hapus_akun
+            message = R.string.tolak_pendaftar
         )
     }
 
@@ -73,7 +81,7 @@ fun ApplicantScreen(
                 scope.launch {
                     when (applicantViewModel.acceptApplicant()) { // Modify to call accept method
                         AcceptApplicantResult.Success -> {
-                            showMessage(R.string.sukses, R.string.logo)
+                            showMessage(R.string.sukses, R.string.berhasil_menerima_pendaftar)
                             applicantViewModel.getAllApplicants()
                         }
                         AcceptApplicantResult.Error -> {
@@ -83,29 +91,55 @@ fun ApplicantScreen(
                 }
             },
             onDismissRequest = { confirmationForAccept = false },
-            message = R.string.login // Modify the message for acceptance
+            message = R.string.terima_pendaftar // Modify the message for acceptance
         )
     }
 
-    Column(
+    Box(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(5.dp)
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.primary)
+            .padding(start = 16.dp, end = 16.dp, top = 32.dp, bottom = 16.dp)
     ) {
-
-        Spacer(modifier = Modifier.padding(5.dp))
-
-        ApplicantList(
-            applicantsManagementUiState = applicantViewModel.applicantsManagementUiState,
-            onDenyClicked = { selectedUsername ->
-                applicantViewModel.selectedUsername = selectedUsername
-                showConfirmDialog = true
-            },
-            onAcceptClicked = { selectedUsername ->
-                applicantViewModel.selectedUsername = selectedUsername
-                confirmationForAccept = true
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(5.dp)
+        ) {
+            Card {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.pendaftar),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp
+                    )
+                }
             }
-        )
+
+            Column(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .padding(5.dp)
+            ) {
+                Spacer(modifier = Modifier.padding(5.dp))
+
+                ApplicantList(
+                    applicantsManagementUiState = applicantViewModel.applicantsManagementUiState,
+                    onDenyClicked = { selectedUsername ->
+                        applicantViewModel.selectedUsername = selectedUsername
+                        showConfirmDialog = true
+                    },
+                    onAcceptClicked = { selectedUsername ->
+                        applicantViewModel.selectedUsername = selectedUsername
+                        confirmationForAccept = true
+                    }
+                )
+            }
+        }
     }
 }
 
@@ -129,11 +163,13 @@ fun ApplicantList(
                     UserCard(
                         user = applicant,
                         options = {
+                            Spacer(modifier = Modifier.padding(8.dp))
+
                             Column(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Row(
-                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    horizontalArrangement = Arrangement.Center,
                                     modifier = Modifier.fillMaxWidth()
                                 ) {
                                     Button(
@@ -141,17 +177,21 @@ fun ApplicantList(
                                     ) {
                                         Text(text = "Tolak")
                                     }
+                                    Spacer(modifier = Modifier.padding(8.dp))
+
                                     Button(
                                         onClick = { applicant.username?.let {onAcceptClicked(it)} },
+                                        colors = ButtonDefaults.buttonColors(
+                                            containerColor = MaterialTheme.colorScheme.tertiary
+                                        )
                                     ) {
-                                        Text(text = "Terima", color = Color.White)
+                                        Text(text = "Terima", color=MaterialTheme.colorScheme.onTertiary)
                                     }
                                 }
                             }
                         }
                     )
                 }
-
             }
         }
     }

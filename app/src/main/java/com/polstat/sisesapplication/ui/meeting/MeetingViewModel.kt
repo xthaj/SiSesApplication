@@ -11,15 +11,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.polstat.sisesapplication.SiSesApplication
-import com.polstat.sisesapplication.data.MeetingRepository
-import com.polstat.sisesapplication.data.UserPreferencesRepository
-import com.polstat.sisesapplication.data.UserRepository
-import com.polstat.sisesapplication.form.ChangePasswordForm
+import com.polstat.sisesapplication.repository.MeetingRepository
+import com.polstat.sisesapplication.repository.UserPreferencesRepository
 import com.polstat.sisesapplication.model.Meeting
-import com.polstat.sisesapplication.model.User
-import com.polstat.sisesapplication.ui.profile.ProfileViewModel
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 private const val TAG = "MeetingViewModel"
 
@@ -31,6 +26,11 @@ class MeetingViewModel(
 
     private lateinit var token: String
     private lateinit var meetings: List<Meeting>
+    var selectedMeetingId: Int by mutableStateOf(0)
+    var sort: String by mutableStateOf("desc")
+    var startDate: String by mutableStateOf("")
+    var endDate: String by mutableStateOf("")
+
 
     var meetingManagementUiState: MeetingManagementUiState by mutableStateOf(MeetingManagementUiState.Loading)
         private set
@@ -44,11 +44,10 @@ class MeetingViewModel(
         getAllMeetings()
     }
 
-    fun getAllMeetings() {
-        viewModelScope.launch {
+    fun getAllMeetings(sortOrder: String = sort, startDate: String = this.startDate, endDate: String = this.endDate) {        viewModelScope.launch {
             meetingManagementUiState = MeetingManagementUiState.Loading
             try {
-                meetings = meetingRepository.getAllMeetings(token)
+                meetings = meetingRepository.getAllMeetings(token, sortOrder, startDate, endDate)
                 meetingManagementUiState = MeetingManagementUiState.Success(meetings)
             } catch(e: Exception) {
                 Log.e(TAG, "Exception: ${e.message}")
@@ -56,6 +55,38 @@ class MeetingViewModel(
             }
         }
     }
+
+    suspend fun deleteMeeting(): DeleteMeetingResult {
+        try {
+            meetingRepository.deleteMeeting(token, selectedMeetingId)
+        } catch (e: Exception) {
+            Log.e(TAG, "exception: ${e.message}")
+            return DeleteMeetingResult.Error
+        }
+        return DeleteMeetingResult.Success
+    }
+
+    suspend fun attendMeeting(): AttendMeetingResult {
+//        Log.e(TAG, "Token: $token")
+        Log.e(TAG, "Meeting id: $selectedMeetingId")
+        Log.e(TAG, "Username: $selectedMeetingId")
+        try {
+            meetingRepository.attendMeeting(token, selectedMeetingId)
+        } catch (e: Exception) {
+            Log.e(TAG, "exception: ${e.message}")
+            return AttendMeetingResult.Error
+        }
+        return AttendMeetingResult.Success
+    }
+
+    fun applyFilter(sortOrder: String, startDate: String, endDate: String) {
+        Log.e(TAG, "sort order: $sortOrder")
+        this.sort = sortOrder
+        this.startDate = startDate
+        this.endDate = endDate
+        getAllMeetings()
+    }
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
@@ -74,4 +105,14 @@ sealed interface MeetingManagementUiState {
     data class Success(val meetings: List<Meeting>): MeetingManagementUiState
     object Error: MeetingManagementUiState
     object Loading: MeetingManagementUiState
+}
+
+enum class DeleteMeetingResult {
+    Success,
+    Error
+}
+
+enum class AttendMeetingResult {
+    Success,
+    Error
 }
